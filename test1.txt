@@ -1,0 +1,6 @@
+Anna=9
+Ivan=5
+Olga=1
+Nina=4
+Jenya=1
+Igor=4
