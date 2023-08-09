@@ -13,31 +13,29 @@ public class Ex2 {
         start();
     }
 
-    public static void start(){
+    public static void start() {
         try {
-            Map<String, String> map = readFile("test0.txt");
+            Map<String, String> map = readFile("test.txt");
             replaceText(map);
-            saveToFile(map, "test1.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("File reading is not successfull.");
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Writing to file is not successfull.");
-            System.out.println(e.getMessage());
+            saveToFile(map, "/s/s/test2.txt");
+        } catch (ReadFileEx | SaveFileEx e) {
+            e.printStackTrace();
         } catch (IllegalArgumentException e) {
             System.out.println("Error in format!");
             System.out.println(e.getMessage());
         }
     }
 
-    private static void saveToFile(Map<String, String> map, String filePath) throws IOException {
-        FileWriter writer = new FileWriter(filePath);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            writer.write(entry.toString());
-            writer.write("\n");
-            writer.flush();
+    private static void saveToFile(Map<String, String> map, String filePath) throws SaveFileEx {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                writer.write(entry.toString());
+                writer.write("\n");
+                writer.flush();
+            }
+        } catch (IOException e) {
+            throw new SaveFileEx(e);
         }
-        writer.close();
     }
 
     private static void replaceText(Map<String, String> map) {
@@ -52,16 +50,18 @@ public class Ex2 {
         }
     }
 
-    private static Map<String, String> readFile(String filePath) throws FileNotFoundException {
+    private static Map<String, String> readFile(String filePath) throws ReadFileEx {
         Map<String, String> map = new LinkedHashMap<>();
         File file = new File(filePath);
-        Scanner sc = new Scanner(file);
-        while (sc.hasNext()) {
-            String line = sc.nextLine();
-            String[] temp = line.split("=");
-            map.put(temp[0], temp[1]);
+        try (Scanner sc = new Scanner(file)) {
+            while (sc.hasNext()) {
+                String line = sc.nextLine();
+                String[] temp = line.split("=");
+                map.put(temp[0], temp[1]);
+            }
+        } catch (FileNotFoundException e) {
+            throw new ReadFileEx(e);
         }
-        sc.close();
         return map;
     }
 }
