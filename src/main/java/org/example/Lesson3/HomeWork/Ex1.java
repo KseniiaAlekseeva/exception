@@ -1,10 +1,24 @@
 package org.example.Lesson3.HomeWork;
 
+import java.io.IOException;
+
 public class Ex1 {
     public static void main(String[] args) {
         try {
-            System.out.println(parsePerson("ррр f ыы 8 ппп 01.11.1223 jj").toString());
+            Person person = parsePerson("8 ррр а ыы f 01.11.1223");
+            Person person1 = parsePerson("01.11.1896 8 ррр а ыы f");
+            Person person2 = parsePerson("8 пппрш а ыы f 01.11.1223");
+            if (person != null) {
+                System.out.println(person.toString());
+                System.out.println(person1.toString());
+                System.out.println(person2.toString());
+                person.saveToFile();
+                person1.saveToFile();
+                person2.saveToFile();
+            }
         } catch (FormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -43,20 +57,20 @@ public class Ex1 {
                     name = arr[i] + " " + arr[i + 1] + " " + arr[i + 2];
                     i += 2;
                 }
-
-                if (name == null)
-                    throw new FormatException("Wrong format of NAME.");
-                if (date == null)
-                    throw new FormatException("Wrong format of DATE.");
-                if (phone == null)
-                    throw new FormatException("Wrong format of PHONE.");
-                if (sex == null)
-                    throw new FormatException("Wrong format of SEX.");
             }
+            if (name == null)
+                throw new FormatException("Wrong format of NAME.");
+            if (date == null)
+                throw new FormatException("Wrong format of DATE.");
+            if (phone == null)
+                throw new FormatException("Wrong format of PHONE.");
+            if (sex == null)
+                throw new FormatException("Wrong format of SEX.");
+            return new Person(name, date, phone, sex);
         } else {
             parseCode(checkRecord(arr));
+            return null;
         }
-        return new Person(name,date,phone,sex);
     }
 
     public static int checkRecord(String[] arr) {

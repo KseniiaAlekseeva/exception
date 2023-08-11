@@ -1,5 +1,9 @@
 package org.example.Lesson3.HomeWork;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Person {
     private String name;
     private String birthDate;
@@ -12,7 +16,6 @@ public class Person {
         this.phone = phone;
         this.sex = sex;
     }
-
 
 
     public String getName() {
@@ -31,6 +34,13 @@ public class Person {
         return sex;
     }
 
+    public void saveToFile() throws IOException {
+        String filePath = name.split(" ")[0] + ".txt";
+        FileWriter writer = new FileWriter(filePath, true);
+            writer.write(name + " " + birthDate + " " + phone + " " + sex);
+            writer.write("\n");
+            writer.close();
+    }
 
     @Override
     public String toString() {
